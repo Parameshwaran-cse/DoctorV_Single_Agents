@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - MedFlow AI</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">AI Agents</div>
+                <div class="nav-item active">📋 Documentation</div>
+            </div>
+            <div class="sidebar-section" style="margin-top: auto;">
+                <div class="sidebar-title">System</div>
+                <div class="nav-item" id="settingsBtn">⚙️ Settings</div>
+                <div class="nav-item" id="logoutBtn">🚪 Logout</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            
+            <!-- Top Template Selector -->
+            <div class="top-bar">
+                <div class="top-bar-header">
+                    <h3>Select Clinical Template</h3>
+                    <div id="activeProviderBadge" class="provider-badge" title="Active AI Provider">
+                        <span class="provider-dot"></span>
+                        <span class="provider-label">Loading...</span>
+                    </div>
+                </div>
+                <div class="template-buttons" id="templateSelector">
+                    <button class="template-btn selected" data-value="soap">SOAP Note</button>
+                    <button class="template-btn" data-value="clinical_note">Clinical Progress Note</button>
+                    <button class="template-btn" data-value="discharge_summary">Discharge Summary</button>
+                    <button class="template-btn" data-value="referral_letter">Referral Letter</button>
+                    <button class="template-btn" data-value="insurance_summary">Insurance Summary</button>
+                    <button class="template-btn" data-value="visit_summary">Patient Visit Summary</button>
+                </div>
+            </div>
+
+            <!-- Split View -->
+            <div class="split-view">
+                
+                <!-- Left Panel: Input Form -->
+                <div class="panel left-panel">
+                    <h3>Encounter Clinical Data</h3>
+                    <form id="docForm">
+                        <input type="hidden" id="document_type" value="soap">
+                        
+                        <div class="form-group full-width">
+                            <label>Patient Name</label>
+                            <input type="text" id="patient_name" required placeholder="e.g. Paramesh Sharma">
+                        </div>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Age</label>
+                                <input type="number" id="patient_age" placeholder="e.g. 46">
+                            </div>
+                            <div class="form-group">
+                                <label>Attending Physician</label>
+                                <input type="text" id="doctor_name" placeholder="e.g. Dr. Sarah Chen">
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>Department / Care Unit</label>
+                            <input type="text" id="department" placeholder="e.g. Emergency Medicine">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>Chief Complaint & History</label>
+                            <textarea id="chief_complaint" rows="3" placeholder="e.g. Severe chest pain radiating to left arm, 2 hours"></textarea>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>Primary Diagnosis / Impressions</label>
+                            <textarea id="diagnosis" rows="2" placeholder="e.g. STEMI — Anterior"></textarea>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>Treatment Plan</label>
+                            <textarea id="treatment_plan" rows="2" placeholder="e.g. Aspirin, Nitroglycerin, prepare for Cath Lab"></textarea>
+                        </div>
+
+                        <div class="form-group full-width" style="margin-top: 1rem;">
+                            <button type="submit" class="btn-primary" id="generateBtn">Generate</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Right Panel: Output -->
+                <div class="panel right-panel">
+                    <div id="emptyState" class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <h4>Ready for Documentation Synthesis</h4>
+                        <p>Enter encounter clinical data and click Generate to produce structured SOAP notes, discharge summaries, or referral letters using live Gemini AI.</p>
+                        <p style="margin-top:1rem; font-size:0.7rem; color:var(--text-secondary)">Powered by Google Gemini</p>
+                    </div>
+
+                    <div id="loader" class="loader" style="margin-top: 40%"></div>
+                    
+                    <div id="outputContainer" class="output-content" style="display: none;"></div>
+                    <div id="outputMeta" class="output-meta" style="display: none;"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ─── Settings Modal ─────────────────────────────────────────────────── -->
+    <div id="settingsModal" class="modal-overlay" style="display:none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2>⚙️ Settings</h2>
+                <button class="modal-close" id="closeSettings">✕</button>
+            </div>
+
+            <div class="settings-section">
+                <div class="settings-section-title">AI Provider</div>
+                <p class="settings-section-desc">Select which AI backend to use for clinical documentation generation. The active provider is used first; if it fails, the system automatically falls back to the others.</p>
+                <div id="providerList" class="provider-list">
+                    <!-- Injected by JS -->
+                    <div class="provider-skeleton"></div>
+                    <div class="provider-skeleton"></div>
+                    <div class="provider-skeleton"></div>
+                </div>
+                <div id="providerSaveMsg" class="settings-save-msg" style="display:none;"></div>
+            </div>
+
+            <div class="settings-section">
+                <div class="settings-section-title">Fallback Behaviour</div>
+                <p class="settings-section-desc">When the selected provider fails, MedFlow AI automatically tries the remaining providers in this order:</p>
+                <div class="fallback-chain">
+                    <span class="fallback-step">Gemini</span>
+                    <span class="fallback-arrow">→</span>
+                    <span class="fallback-step">Groq</span>
+                    <span class="fallback-arrow">→</span>
+                    <span class="fallback-step">OpenAI</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

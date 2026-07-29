@@ -1,0 +1,19 @@
+# Environment files
+.env
+.env.*
+
+# Python
+__pycache__/
+*.pyc
+
+# Logs
+*.log
+
+# Database
+*.db
+
+# Node
+node_modules/
+
+# Linux/KDE
+.directory
