@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Follow-up Care Agent | MedFlow AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+    
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-titles">
+                <h1>Follow-up Care Agent</h1>
+                <p>Generate personalized post-visit care plans instantly with AI.</p>
+            </div>
+            <button id="settings-btn" class="settings-btn" aria-label="Settings" title="Agent Settings">⚙️</button>
+        </header>
+
+        <main class="main-content">
+            <section class="form-section glass-panel">
+                <h2>Patient Details</h2>
+                <form id="followup-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="patient_name">Patient Name</label>
+                            <input type="text" id="patient_name" required placeholder="e.g. John Doe">
+                        </div>
+                        <div class="form-group">
+                            <label for="patient_age">Age</label>
+                            <input type="number" id="patient_age" placeholder="e.g. 45">
+                        </div>
+                        <div class="form-group">
+                            <label for="patient_gender">Gender</label>
+                            <select id="patient_gender">
+                                <option value="">Select</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="diagnosis">Diagnosis</label>
+                        <input type="text" id="diagnosis" required placeholder="e.g. Type 2 Diabetes Mellitus with Hypertension">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="treatment_given">Treatment Given</label>
+                        <textarea id="treatment_given" rows="2" placeholder="e.g. Adjusted Metformin to 1000mg BD..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="medications">Medications (comma separated)</label>
+                        <input type="text" id="medications" placeholder="e.g. Metformin 1000mg BD, Amlodipine 5mg OD">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="allergies">Allergies (comma separated)</label>
+                        <input type="text" id="allergies" placeholder="e.g. Penicillin, Peanuts">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="follow_up_duration_weeks">Follow-up Duration (Weeks)</label>
+                            <input type="number" id="follow_up_duration_weeks" min="1" max="52" value="4">
+                        </div>
+                        <div class="form-group">
+                            <label for="special_instructions">Special Instructions</label>
+                            <input type="text" id="special_instructions" placeholder="e.g. Standard follow-up">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="generate-btn" id="generate-btn">
+                        <span>Generate Care Plan</span>
+                        <div class="loader" id="btn-loader"></div>
+                    </button>
+                </form>
+            </section>
+
+            <section class="result-section glass-panel" id="result-section">
+                <h2>Generated Care Plan</h2>
+                <div class="result-content" id="result-content">
+                    <p class="placeholder-text">Fill out the form and click generate to see the AI care plan.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+    <div id="settings-modal" class="modal">
+        <div class="modal-content glass-panel">
+            <span class="close-btn" id="close-settings">&times;</span>
+            <h2>Agent Settings</h2>
+            <div class="form-group" style="margin-top: 20px;">
+                <label for="agent_provider">Preferred AI Agent</label>
+                <select id="agent_provider">
+                    <option value="gemini">Gemini (Default)</option>
+                    <option value="groq">Groq (Llama-3.3)</option>
+                    <option value="grok">Grok (Grok-Beta)</option>
+                </select>
+                <small style="display: block; margin-top: 8px; color: rgba(255,255,255,0.7); font-size: 0.85rem;">
+                    The selected agent is saved locally and used for generation.
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
